@@ -1,0 +1,57 @@
+TEMPLATE FOR A SERVER
+
+// using http to start the server
+const http = require('http'); 
+// this import will handle all the file handling we need to do
+const fs = require('fs');
+// code will be listening on port 3000 for our server
+const port = 3000;
+
+// creating the server by using http library and createServer function
+// createServer function takes a function that takes a request and response params
+const server = http.createServer(function(req, res) {
+/*
+  // this function will handle all the activity on our server 
+    // ex: this function will be called when request a page from our server
+
+  // returning a response to the user using res object
+  // every user requesting something from our server will receive this ("Hello node") response
+  res.write("Hello node");
+  res.end();
+*/
+
+  // this function will send html instead of plain text
+  // telling the browser we're going to write html
+
+  // first param of writeHead is the status code
+  // second param of writeHead is the different headers we want to set
+  res.writeHead(200, {
+    'Content-Type': 'text/html',
+  });
+
+  // reading our index.html file 
+  // second param is a function that will handle any error and/or operate on the data in given file
+  fs.readFile('./public/index.html', function(error, data) {
+    if (error) {
+      // couldn't find the file we were looking for
+      res.writeHead(404);
+      res.write('Error: File not found');
+    } else {
+      res.write(data);
+    }
+    res.end();
+  });
+
+})
+
+
+// setting up our server to listen on port 3000
+// listen function also has takes a function that checks for an error if there is one
+server.listen(port, function(error) {
+  if (error) {
+    console.log("Something went wrong", error);
+  } else {
+    console.log("Server is listening on port", port);
+  }
+}) 
+
